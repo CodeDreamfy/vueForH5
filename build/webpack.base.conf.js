@@ -2,7 +2,11 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
-
+var autoprefixer = require('autoprefixer');
+var mqpacker = require('css-mqpacker');
+var autoprefixerInstance = autoprefixer({
+  browsers: ['last 2 versions']
+});
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -36,6 +40,17 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
+      },
+			{
+        test: /\.less$/,
+        loader: 'vue-loader',
+        options: {
+					vueLoaderConfig,
+					postcss: [
+						autoprefixerInstance,
+						mqpacker()
+					]
+				}
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
